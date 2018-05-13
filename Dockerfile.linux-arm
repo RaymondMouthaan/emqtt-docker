@@ -3,7 +3,7 @@ COPY tmp/qemu-arm-static /usr/bin/qemu-arm-static
 
 MAINTAINER Raymond Mouthaan <raymondmmouthaan@gmail.com>
 
-ENV EMQ_VERSION=v2.3.5
+ENV EMQ_VERSION=v2.3.8
 
 COPY ./start.sh /start.sh
 
