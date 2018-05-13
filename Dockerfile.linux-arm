@@ -1,7 +1,7 @@
 FROM arm32v6/alpine
 COPY tmp/qemu-arm-static /usr/bin/qemu-arm-static
 
-MAINTAINER Raymond Mouthaan <raymondmmouthaan@gmail.com>
+LABEL maintainer="Raymond Mouthaan <raymondmmouthaan@gmail.com>"
 
 ENV EMQ_VERSION=v2.3.8
 
