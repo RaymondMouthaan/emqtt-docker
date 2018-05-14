@@ -214,13 +214,13 @@ update_docker_configuration() {
     "experimental": "enabled"
   }' | tee $HOME/.docker/config.json
 
-  # enable experimental
-  echo '{
-    "experimental": true,
-    "storage-driver": "overlay2",
-    "max-concurrent-downloads": 50,
-    "max-concurrent-uploads": 50
-  }' | sudo tee /etc/docker/daemon.json
+  # # enable experimental
+  # echo '{
+  #   "experimental": true,
+  #   "storage-driver": "overlay2",
+  #   "max-concurrent-downloads": 100,
+  #   "max-concurrent-uploads": 100
+  # }' | sudo tee /etc/docker/daemon.json
 
   sudo service docker restart
 }
