@@ -10,7 +10,7 @@ env:
   global:
     - EMQ_VERSION=v2.3.8
     - IMAGE=raymondmm/emqtt
-    - QEMU_VERSION=v2.11.1
+    - QEMU_VERSION=v2.9.1-1
 
 before_install:
   - ./.docker/docker.sh prepare
