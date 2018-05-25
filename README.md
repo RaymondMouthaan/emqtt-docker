@@ -1,15 +1,18 @@
 Emqtt-docker
 ================
-EMQ (Erlang MQTT Broker) is a distributed, massively scalable, highly extensible MQTT message broker written in Erlang/OTP.
-
 [![Build Status](https://travis-ci.org/RaymondMouthaan/emqtt-docker.svg?branch=master)](https://travis-ci.org/RaymondMouthaan/emqtt-docker)
 [![This image on DockerHub](https://img.shields.io/docker/pulls/raymondmm/emqtt.svg)](https://hub.docker.com/r/raymondmm/emqtt/)
+[![This image on DockerHub](https://img.shields.io/docker/stars/raymondmm/emqtt.svg)](https://hub.docker.com/r/raymondmm/emqtt/)
 
-This project is based on the official EMQ Docker image, but adds qemu-arm-static and uses manifest-tool to push manifest list to docker hub.
+EMQ (Erlang MQTT Broker) is a distributed, massively scalable, highly extensible MQTT message broker written in Erlang/OTP.
 
-## Architectures
-Currently supported archetectures:
-- **linux-arm**
+EMQTT docker is supported by manifest list, which means one doesn't need to specify the tag for a specific architecture. Using the image without any tag or the latest tag , will pull the right image for the architecture required.
+
+## Architecture
+Currently EMQTT docker has support for multiple architectures:
+- `amd64` : based on linux Alpine - for most desktop computer (e.g. x64, x86-64, x86_64)
+- `arm32v6` : based on linux Alpine - (i.e. Raspberry PI 1, 2, 3, Zero)
+- `arm64v8` : based on linux Alpine - (i.e. Pine64)
 
 ## Usage
 ### docker run
@@ -111,10 +114,10 @@ services:
 
     deploy:
       replicas: 1
-      
+
 networks:
   emqtt-net:
     external: true
 ```
 
-Please refer to the offical documentation: https://github.com/emqtt/emq-docker
+Please refer to the offical documentation for more info: https://github.com/emqtt/emq-docker
