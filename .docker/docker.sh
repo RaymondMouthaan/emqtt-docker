@@ -101,11 +101,11 @@ docker_manifest_list_latest() {
   # Manifest Create latest
   echo "DOCKER MANIFEST: Create and Push docker manifest list - $TARGET:latest."
   docker manifest create $TARGET:latest \
-      $TARGET:latest-alpine-amd64 \
-      $TARGET:latest-alpine-arm32v6
+      $TARGET:$EMQ_VERSION-alpine-amd64 \
+      $TARGET:$EMQ_VERSION-alpine-arm32v6
 
   # Manifest Annotate EMQ_VERSION
-  docker manifest annotate $TARGET:latest $TARGET:latest-alpine-arm32v6 --os=linux --arch=arm --variant=v6
+  docker manifest annotate $TARGET:latest $TARGET:$EMQ_VERSION-alpine-arm32v6 --os=linux --arch=arm --variant=v6
 
   # Manifest Push EMQ_VERSION
   docker manifest push $TARGET:latest
