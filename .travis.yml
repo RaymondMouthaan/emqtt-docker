@@ -8,13 +8,16 @@ language:
 
 env:
   global:
-    - EMQ_VERSION=v2.3.8
-    - IMAGE=raymondmm/emqtt
+    - BASE_IMAGE=raymondmm/emqtt
     - QEMU_VERSION=v2.12.0
 
 before_install:
   - ./.docker/docker.sh prepare
 
+before_script:
+    # Set EMQ_VERSION
+    - if [ ! -z "$TRAVIS_TAG" ]; then export EMQ_VERSION=$TRAVIS_TAG; else export EMQ_VERSION=v2.3.8; fi
+    
 script:
   - ./.docker/docker.sh build
   - ./.docker/docker.sh test
