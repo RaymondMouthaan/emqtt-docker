@@ -132,7 +132,7 @@ docker_manifest_list_version_os_arch() {
   docker manifest create $TARGET:$EMQ_VERSION-alpine-amd64 \
       $TARGET:$EMQ_VERSION-alpine-amd64
 
-  # Manifest push alpine-amd64
+  # Manifest Push alpine-amd64
   docker manifest push $TARGET:$EMQ_VERSION-alpine-amd64
 
   # Manifest Create alpine-arm32v6
@@ -140,7 +140,10 @@ docker_manifest_list_version_os_arch() {
   docker manifest create $TARGET:$EMQ_VERSION-alpine-arm32v6 \
       $TARGET:$EMQ_VERSION-alpine-arm32v6
 
-  # Manifest push alpine-amd64
+  # Manifest Annotate alpine-arm32v6
+  docker manifest annotate $TARGET:$EMQ_VERSION-alpine-arm32v6 $TARGET:$EMQ_VERSION-alpine-arm32v6 --os=linux --arch=arm --variant=v6
+
+  # Manifest Push alpine-arm32v6
   docker manifest push $TARGET:$EMQ_VERSION-alpine-arm32v6
 
   # Manifest Create alpine-arm64v8
@@ -148,7 +151,10 @@ docker_manifest_list_version_os_arch() {
   docker manifest create $TARGET:$EMQ_VERSION-alpine-arm64v8 \
       $TARGET:$EMQ_VERSION-alpine-arm64v8
 
-  # Manifest push alpine-amd64
+  # Manifest Annotate alpine-arm64v8
+  docker manifest annotate $TARGET:$EMQ_VERSION-alpine-arm64v8 $TARGET:$EMQ_VERSION-alpine-arm64v8 --os=linux --arch=arm64 --variant=v8
+  
+  # Manifest Push alpine-amd64
   docker manifest push $TARGET:$EMQ_VERSION-alpine-arm64v8
 }
 
