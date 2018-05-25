@@ -1,12 +1,26 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
-LABEL maintainer="Raymond M Mouthaan <raymondmmouthaan@gmail.com>"
-
+# Build arguments
+# --build-arg BUILD_REF=$TRAVIS_COMMIT --build-arg BUILD_DATE=$(date +"%Y-%m-%dT%H:%M:%SZ") --build-arg BUILD_VERSION=$BUILD_VERSION
+ARG BUILD_DATE
+ARG BUILD_VERSION
+ARG BUILD_REF
 ARG QEMU_ARCH
 
-ENV EMQ_VERSION=v2.3.8
-
+# Basic build-time metadata as defined at http://label-schema.org
+LABEL org.label-schema.build-date=$BUILD_DATE \
+    org.label-schema.docker.dockerfile=".docker/Dockerfile.alpine-tmpl" \
+    org.label-schema.license="GNU" \
+    org.label-schema.name="Emqtt" \
+    org.label-schema.version=$BUILD_VERSION \
+    org.label-schema.description="" \
+    org.label-schema.url="" \
+    org.label-schema.vcs-ref=$BUILD_REF \
+    org.label-schema.vcs-type="Git" \
+    org.label-schema.vcs-url="" \
+    maintainer="Raymond M Mouthaan <raymondmmouthaan@gmail.com>"
+    
 USER root
 COPY tmp/qemu-$QEMU_ARCH-static /usr/bin/qemu-$QEMU_ARCH-static
 
