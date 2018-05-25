@@ -42,6 +42,7 @@ docker_build() {
     #
     docker build --build-arg BUILD_REF=$TRAVIS_COMMIT --build-arg BUILD_DATE=$(date +"%Y-%m-%dT%H:%M:%SZ") --build-arg BUILD_VERSION=$EMQ_VERSION --build-arg BASE_IMAGE=amd64/alpine --build-arg QEMU_ARCH=x86_64 --file ./.docker/Dockerfile.alpine-tmpl --tag $TARGET:build-alpine-amd64 .
     docker build --build-arg BUILD_REF=$TRAVIS_COMMIT --build-arg BUILD_DATE=$(date +"%Y-%m-%dT%H:%M:%SZ") --build-arg BUILD_VERSION=$EMQ_VERSION --build-arg BASE_IMAGE=arm32v6/alpine --build-arg QEMU_ARCH=arm --file ./.docker/Dockerfile.alpine-tmpl --tag $TARGET:build-alpine-arm32v6 .
+    docker build --build-arg BUILD_REF=$TRAVIS_COMMIT --build-arg BUILD_DATE=$(date +"%Y-%m-%dT%H:%M:%SZ") --build-arg BUILD_VERSION=$EMQ_VERSION --build-arg BASE_IMAGE=arm64v8/alpine --build-arg QEMU_ARCH=aarch64 --file ./.docker/Dockerfile.alpine-tmpl --tag $TARGET:build-alpine-arm64v8 .
 }
 
 docker_test() {
@@ -61,18 +62,28 @@ docker_test() {
     else
        echo "DOCKER TEST: PASSED - Docker container succeeded to start for build-alpine-arm32v6."
     fi
+
+    docker run -d --rm --name=test-alpine-arm64v8 $TARGET:build-alpine-arm64v8
+    if [ $? -ne 0 ]; then
+       echo "DOCKER TEST: FAILED - Docker container failed to start for build-alpine-arm64v8."
+       exit 1
+    else
+       echo "DOCKER TEST: PASSED - Docker container succeeded to start for build-alpine-arm64v8."
+    fi
 }
 
 docker_tag() {
     echo "DOCKER TAG: Tag all docker images."
     docker tag $TARGET:build-alpine-amd64 $TARGET:$EMQ_VERSION-alpine-amd64
     docker tag $TARGET:build-alpine-arm32v6 $TARGET:$EMQ_VERSION-alpine-arm32v6
+    docker tag $TARGET:build-alpine-arm64v8 $TARGET:$EMQ_VERSION-alpine-arm64v8
 }
 
 docker_push() {
     echo "DOCKER PUSH: Push all docker images."
     docker push $TARGET:$EMQ_VERSION-alpine-amd64
     docker push $TARGET:$EMQ_VERSION-alpine-arm32v6
+    docker push $TARGET:$EMQ_VERSION-alpine-arm64v8
 }
 
 docker_manifest_list() {
@@ -88,10 +99,12 @@ docker_manifest_list_version() {
   echo "DOCKER MANIFEST: Create and Push docker manifest list - $TARGET:$EMQ_VERSION."
   docker manifest create $TARGET:$EMQ_VERSION \
       $TARGET:$EMQ_VERSION-alpine-amd64 \
-      $TARGET:$EMQ_VERSION-alpine-arm32v6
+      $TARGET:$EMQ_VERSION-alpine-arm32v6 \
+      $TARGET:$EMQ_VERSION-alpine-arm64v8
 
   # Manifest Annotate EMQ_VERSION
   docker manifest annotate $TARGET:$EMQ_VERSION $TARGET:$EMQ_VERSION-alpine-arm32v6 --os=linux --arch=arm --variant=v6
+  docker manifest annotate $TARGET:$EMQ_VERSION $TARGET:$EMQ_VERSION-alpine-arm64v8 --os=linux --arch=arm64 --variant=v8
 
   # Manifest Push EMQ_VERSION
   docker manifest push $TARGET:$EMQ_VERSION
@@ -102,10 +115,12 @@ docker_manifest_list_latest() {
   echo "DOCKER MANIFEST: Create and Push docker manifest list - $TARGET:latest."
   docker manifest create $TARGET:latest \
       $TARGET:$EMQ_VERSION-alpine-amd64 \
-      $TARGET:$EMQ_VERSION-alpine-arm32v6
+      $TARGET:$EMQ_VERSION-alpine-arm32v6 \
+      $TARGET:$EMQ_VERSION-alpine-arm64v8
 
   # Manifest Annotate EMQ_VERSION
   docker manifest annotate $TARGET:latest $TARGET:$EMQ_VERSION-alpine-arm32v6 --os=linux --arch=arm --variant=v6
+  docker manifest annotate $TARGET:latest $TARGET:$EMQ_VERSION-alpine-arm64v8 --os=linux --arch=arm64 --variant=v8
 
   # Manifest Push EMQ_VERSION
   docker manifest push $TARGET:latest
@@ -127,6 +142,14 @@ docker_manifest_list_version_os_arch() {
 
   # Manifest push alpine-amd64
   docker manifest push $TARGET:$EMQ_VERSION-alpine-arm32v6
+
+  # Manifest Create alpine-arm64v8
+  echo "DOCKER MANIFEST: Create and Push docker manifest list - $TARGET:$EMQ_VERSION-alpine-arm64v8."
+  docker manifest create $TARGET:$EMQ_VERSION-alpine-arm64v8 \
+      $TARGET:$EMQ_VERSION-alpine-arm64v8
+
+  # Manifest push alpine-amd64
+  docker manifest push $TARGET:$EMQ_VERSION-alpine-arm64v8
 }
 
 setup_dependencies() {
