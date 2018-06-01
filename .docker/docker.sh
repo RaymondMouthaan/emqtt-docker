@@ -82,67 +82,67 @@ docker_manifest_list() {
 }
 
 docker_manifest_list_version() {
-  # Manifest Create EMQ_VERSION
-  echo "DOCKER MANIFEST: Create and Push docker manifest list - $TARGET:$EMQ_VERSION."
-  docker manifest create $TARGET:$EMQ_VERSION \
-      $TARGET:$EMQ_VERSION-alpine-amd64 \
-      $TARGET:$EMQ_VERSION-alpine-arm32v6 \
-      $TARGET:$EMQ_VERSION-alpine-arm64v8
+  # Manifest Create BUILD_VERSION
+  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${BUILD_VERSION}."
+  docker manifest create ${TARGET}:${BUILD_VERSION} \
+      ${TARGET}:${BUILD_VERSION}-alpine-amd64 \
+      ${TARGET}:${BUILD_VERSION}-alpine-arm32v6 \
+      ${TARGET}:${BUILD_VERSION}-alpine-arm64v8
 
-  # Manifest Annotate EMQ_VERSION
-  docker manifest annotate $TARGET:$EMQ_VERSION $TARGET:$EMQ_VERSION-alpine-arm32v6 --os=linux --arch=arm --variant=v6
-  docker manifest annotate $TARGET:$EMQ_VERSION $TARGET:$EMQ_VERSION-alpine-arm64v8 --os=linux --arch=arm64 --variant=v8
+  # Manifest Annotate BUILD_VERSION
+  docker manifest annotate ${TARGET}:${BUILD_VERSION} ${TARGET}:${BUILD_VERSION}-alpine-arm32v6 --os=linux --arch=arm --variant=v6
+  docker manifest annotate ${TARGET}:${BUILD_VERSION} ${TARGET}:${BUILD_VERSION}-alpine-arm64v8 --os=linux --arch=arm64 --variant=v8
 
-  # Manifest Push EMQ_VERSION
-  docker manifest push $TARGET:$EMQ_VERSION
+  # Manifest Push BUILD_VERSION
+  docker manifest push ${TARGET}:${BUILD_VERSION}
 }
 
 docker_manifest_list_latest() {
   # Manifest Create latest
-  echo "DOCKER MANIFEST: Create and Push docker manifest list - $TARGET:latest."
-  docker manifest create $TARGET:latest \
-      $TARGET:$EMQ_VERSION-alpine-amd64 \
-      $TARGET:$EMQ_VERSION-alpine-arm32v6 \
-      $TARGET:$EMQ_VERSION-alpine-arm64v8
+  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:latest."
+  docker manifest create ${TARGET}:latest \
+      ${TARGET}:${BUILD_VERSION}-alpine-amd64 \
+      ${TARGET}:${BUILD_VERSION}-alpine-arm32v6 \
+      ${TARGET}:${BUILD_VERSION}-alpine-arm64v8
 
-  # Manifest Annotate EMQ_VERSION
-  docker manifest annotate $TARGET:latest $TARGET:$EMQ_VERSION-alpine-arm32v6 --os=linux --arch=arm --variant=v6
-  docker manifest annotate $TARGET:latest $TARGET:$EMQ_VERSION-alpine-arm64v8 --os=linux --arch=arm64 --variant=v8
+  # Manifest Annotate BUILD_VERSION
+  docker manifest annotate ${TARGET}:latest ${TARGET}:${BUILD_VERSION}-alpine-arm32v6 --os=linux --arch=arm --variant=v6
+  docker manifest annotate ${TARGET}:latest ${TARGET}:${BUILD_VERSION}-alpine-arm64v8 --os=linux --arch=arm64 --variant=v8
 
-  # Manifest Push EMQ_VERSION
-  docker manifest push $TARGET:latest
+  # Manifest Push BUILD_VERSION
+  docker manifest push ${TARGET}:latest
 }
 
 docker_manifest_list_version_os_arch() {
   # Manifest Create alpine-amd64
-  echo "DOCKER MANIFEST: Create and Push docker manifest list - $TARGET:$EMQ_VERSION-alpine-amd64."
-  docker manifest create $TARGET:$EMQ_VERSION-alpine-amd64 \
-      $TARGET:$EMQ_VERSION-alpine-amd64
+  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${BUILD_VERSION}-alpine-amd64."
+  docker manifest create ${TARGET}:${BUILD_VERSION}-alpine-amd64 \
+      ${TARGET}:${BUILD_VERSION}-alpine-amd64
 
   # Manifest Push alpine-amd64
-  docker manifest push $TARGET:$EMQ_VERSION-alpine-amd64
+  docker manifest push ${TARGET}:${BUILD_VERSION}-alpine-amd64
 
   # Manifest Create alpine-arm32v6
-  echo "DOCKER MANIFEST: Create and Push docker manifest list - $TARGET:$EMQ_VERSION-alpine-arm32v6."
-  docker manifest create $TARGET:$EMQ_VERSION-alpine-arm32v6 \
-      $TARGET:$EMQ_VERSION-alpine-arm32v6
+  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${BUILD_VERSION}-alpine-arm32v6."
+  docker manifest create ${TARGET}:${BUILD_VERSION}-alpine-arm32v6 \
+      ${TARGET}:${BUILD_VERSION}-alpine-arm32v6
 
   # Manifest Annotate alpine-arm32v6
-  docker manifest annotate $TARGET:$EMQ_VERSION-alpine-arm32v6 $TARGET:$EMQ_VERSION-alpine-arm32v6 --os=linux --arch=arm --variant=v6
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-alpine-arm32v6 ${TARGET}:${BUILD_VERSION}-alpine-arm32v6 --os=linux --arch=arm --variant=v6
 
   # Manifest Push alpine-arm32v6
-  docker manifest push $TARGET:$EMQ_VERSION-alpine-arm32v6
+  docker manifest push ${TARGET}:${BUILD_VERSION}-alpine-arm32v6
 
   # Manifest Create alpine-arm64v8
-  echo "DOCKER MANIFEST: Create and Push docker manifest list - $TARGET:$EMQ_VERSION-alpine-arm64v8."
-  docker manifest create $TARGET:$EMQ_VERSION-alpine-arm64v8 \
-      $TARGET:$EMQ_VERSION-alpine-arm64v8
+  echo "DOCKER MANIFEST: Create and Push docker manifest list - ${TARGET}:${BUILD_VERSION}-alpine-arm64v8."
+  docker manifest create ${TARGET}:${BUILD_VERSION}-alpine-arm64v8 \
+      ${TARGET}:${BUILD_VERSION}-alpine-arm64v8
 
   # Manifest Annotate alpine-arm64v8
-  docker manifest annotate $TARGET:$EMQ_VERSION-alpine-arm64v8 $TARGET:$EMQ_VERSION-alpine-arm64v8 --os=linux --arch=arm64 --variant=v8
+  docker manifest annotate ${TARGET}:${BUILD_VERSION}-alpine-arm64v8 ${TARGET}:${BUILD_VERSION}-alpine-arm64v8 --os=linux --arch=arm64 --variant=v8
 
   # Manifest Push alpine-amd64
-  docker manifest push $TARGET:$EMQ_VERSION-alpine-arm64v8
+  docker manifest push ${TARGET}:${BUILD_VERSION}-alpine-arm64v8
 }
 
 setup_dependencies() {
@@ -175,7 +175,7 @@ update_docker_configuration() {
   #   "max-concurrent-uploads": 100
   # }' | sudo tee /etc/docker/daemon.json
 
-  sudo service docker restart
+  # sudo service docker restart
 }
 
 prepare_qemu(){
