@@ -1,5 +1,5 @@
-ARG BASE_IMAGE
-FROM $BASE_IMAGE
+ARG BUILD_FROM
+FROM ${BUILD_FROM}
 
 # Build arguments
 ARG BUILD_DATE
@@ -8,20 +8,20 @@ ARG BUILD_REF
 ARG QEMU_ARCH
 
 # Basic build-time metadata as defined at http://label-schema.org
-LABEL org.label-schema.build-date=$BUILD_DATE \
+LABEL org.label-schema.build-date=${BUILD_DATE} \
     org.label-schema.docker.dockerfile=".docker/Dockerfile.alpine-tmpl" \
     org.label-schema.license="GNU" \
     org.label-schema.name="Emqtt" \
-    org.label-schema.version=$BUILD_VERSION \
+    org.label-schema.version=${BUILD_VERSION} \
     org.label-schema.description="The Massively Scalable MQTT Broker for IoT and Mobile Applications" \
     org.label-schema.url="http://emqtt.io/" \
-    org.label-schema.vcs-ref=$BUILD_REF \
+    org.label-schema.vcs-ref=${BUILD_REF} \
     org.label-schema.vcs-type="Git" \
     org.label-schema.vcs-url="https://github.com/RaymondMouthaan/emqtt-docker" \
     maintainer="Raymond M Mouthaan <raymondmmouthaan@gmail.com>"
 
 USER root
-COPY tmp/qemu-$QEMU_ARCH-static /usr/bin/qemu-$QEMU_ARCH-static
+COPY tmp/qemu-${QEMU_ARCH}-static /usr/bin/qemu-${QEMU_ARCH}-static
 
 COPY ./start.sh /start.sh
 
