@@ -31,12 +31,12 @@ script:
     # Test Docker image
     - ./.docker/docker.sh test
 
-    # Tag Docker image
-    - ./.docker/docker.sh tag
-
     # Push Docker image (TODO move to function)
     - >
       if [ ! -z "${TRAVIS_TAG}" ]; then
+        # Tag Docker image
+        ./.docker/docker.sh tag
+          
         # Docker Login
         echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
 
