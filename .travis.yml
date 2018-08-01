@@ -7,39 +7,61 @@ language:
   - 'bash'
 
 env:
-  global:
-    - TARGET=raymondmm/emqtt
-    - QEMU_VERSION=v2.12.0
+    global:
+        - TARGET=raymondmm/emqtt
+        - QEMU_VERSION=v2.12.0
+    matrix:
+        - BUILD_FROM=amd64/alpine:3.7 QEMU_ARCH=x86_64 OS_ARCH=alpine-amd64
+        - BUILD_FROM=arm32v6/alpine:3.7 QEMU_ARCH=arm OS_ARCH=alpine-arm32v6
+        - BUILD_FROM=arm64v8/alpine:3.7 QEMU_ARCH=aarch64 OS_ARCH=alpine-arm64v8
 
 before_install:
   - ./.docker/docker.sh prepare
 
+install: true
+
 before_script:
-    # Set EMQ_VERSION
-    - if [ ! -z "$TRAVIS_TAG" ]; then export EMQ_VERSION=$TRAVIS_TAG; else export EMQ_VERSION=v2.3.8; fi
+    # Set BUILD_VERSION
+    - if [ ! -z "${TRAVIS_TAG}" ]; then export BUILD_VERSION=${TRAVIS_TAG}; else export BUILD_VERSION=v2.3.10; fi
 
 script:
-  - ./.docker/docker.sh build
-  - ./.docker/docker.sh test
+    # Build Docker image
+    - ./.docker/docker.sh build
 
-after_success:
-  - >
-    if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-      # Docker Login
-      echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    # Test Docker image
+    - ./.docker/docker.sh test
 
-      # Tag all images
-      ./.docker/docker.sh tag
+    # Push Docker image (TODO move to function)
+    - >
+      if [ ! -z "${TRAVIS_TAG}" ]; then
+        # Tag Docker image
+        ./.docker/docker.sh tag
+          
+        # Docker Login
+        echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
 
-      # Push all images
-      ./.docker/docker.sh push
+        # Push Docker image
+        docker push ${TARGET}:${BUILD_VERSION}-${OS_ARCH}
 
-      # Create and push manifest list
-      ./.docker/docker.sh manifest-list
+        # Docker Logout
+        docker logout
+      fi
 
-      # Docker Logout
-      docker logout
-    fi
+jobs:
+    include:
+        - stage: manifest
+          if: tag =~ ^v
+          script:
+              # Create and push Docker manifest lists (TODO move to function)
+              # Docker Login
+              - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+              # Create and Push Docker Manifest Lists to Docker Hub
+              - echo "Create manifest list for all docker images."
+              - ./.docker/docker.sh manifest-list
+
+              # Docker Logout
+              - docker logout
 
 # notify me when things fail
 notifications:
