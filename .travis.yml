@@ -9,7 +9,7 @@ language:
 env:
     global:
         - TARGET=raymondmm/emqtt
-        - QEMU_VERSION=v2.12.0
+        - QEMU_VERSION=v3.0.0
     matrix:
         - BUILD_FROM=amd64/alpine:3.7 QEMU_ARCH=x86_64 OS_ARCH=alpine-amd64
         - BUILD_FROM=arm32v6/alpine:3.7 QEMU_ARCH=arm OS_ARCH=alpine-arm32v6
@@ -36,7 +36,7 @@ script:
       if [ ! -z "${TRAVIS_TAG}" ]; then
         # Tag Docker image
         ./.docker/docker.sh tag
-          
+
         # Docker Login
         echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
 
